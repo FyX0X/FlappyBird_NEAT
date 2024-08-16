@@ -4,12 +4,15 @@ import time
 import random
 import os
 import pickle
+import NNetworkDisplay
 
 pygame.font.init()
 
-
-WIN_WIDTH = 576
-WIN_HEIGHT = 800
+GAME_WIDTH = 576
+NNDISPLAY_WIDTH = 400
+WIN_WIDTH = GAME_WIDTH + NNDISPLAY_WIDTH
+WIN_HEIGHT = 750
+GROUND_LEVEL = WIN_HEIGHT - 70
 
 BIRD_IMGS = []
 BIRD_IMGS.append(pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "bird1.png"))))
@@ -154,8 +157,8 @@ class Base:
         win.blit(self.IMG, (self.x2, self.y))
 
 
-def draw_window(win, bird, pipes, base, score, is_dead):
-    win.blit(BG_IMG, (0,0))
+def draw_window(win, bird, pipes, base, score, is_dead, genome):
+    win.blit(BG_IMG, (0,-200))
     base.draw(win)
     for pipe in pipes:
         pipe.draw(win)
@@ -163,16 +166,34 @@ def draw_window(win, bird, pipes, base, score, is_dead):
     bird.draw(win)
 
     score_text = STAT_FONT.render("Score: "+ str(score), 1, (255, 255, 255))
-    win.blit(score_text, (WIN_WIDTH - 10 - score_text.get_width(), 10))
+    win.blit(score_text, (GAME_WIDTH - 10 - score_text.get_width(), 10))
 
     if is_dead:
         die_text = STAT_FONT.render("You died", 1, (255, 255, 255))
-        win.blit(die_text, (WIN_WIDTH/2 - score_text.get_width()/2, WIN_HEIGHT/2))
+        win.blit(die_text, (GAME_WIDTH/2 - score_text.get_width()/2, WIN_HEIGHT/2))
 
-        game_over_screen = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
+        game_over_screen = pygame.Surface((GAME_WIDTH, WIN_HEIGHT))
         game_over_screen.fill((0,0,0))
         game_over_screen.set_alpha(160)
         win.blit(game_over_screen, (0,0))
+
+    # DRAW Neural Network
+    white_bg = pygame.Surface((NNDISPLAY_WIDTH, WIN_HEIGHT))
+    white_bg.fill((255, 255, 255))
+    win.blit(white_bg, (GAME_WIDTH, 0))
+
+    # NN TITLE
+    NNdisplay_text = STAT_FONT.render("Neural Network: ", 1, (0, 0, 0))
+    win.blit(NNdisplay_text, (GAME_WIDTH + 10, 10))
+
+    # SCHEMA
+    net_size = (NNDISPLAY_WIDTH - 20, WIN_HEIGHT - 20 - NNdisplay_text.get_height())
+    net_pos = (GAME_WIDTH + 10, 10 + NNdisplay_text.get_height())
+
+    layers, weighted_connections = NNetworkDisplay.load_network(config, genome)
+    NNetworkDisplay.draw_network(win, layers, weighted_connections, net_size, net_pos)
+
+
 
 
     pygame.display.update()
@@ -184,7 +205,7 @@ def main(genome, config):
 
     is_dead = False
 
-    base = Base(730)
+    base = Base(GROUND_LEVEL)
     pipes = [Pipe(600)]
     win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     clock = pygame.time.Clock()
@@ -242,11 +263,11 @@ def main(genome, config):
             for r in rem:
                 pipes.remove(r)
 
-            if bird.y + bird.img.get_height() >= 730 or bird.y < 0:
+            if bird.y + bird.img.get_height() >= GROUND_LEVEL or bird.y < 0:
                 is_dead = True
 
 
-        draw_window(win, bird, pipes, base, score, is_dead)
+        draw_window(win, bird, pipes, base, score, is_dead, genome)
 
 
 if __name__ == "__main__":
