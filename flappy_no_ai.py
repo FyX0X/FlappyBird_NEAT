@@ -151,12 +151,15 @@ class Base:
         win.blit(self.IMG, (self.x1, self.y))
         win.blit(self.IMG, (self.x2, self.y))
 
+
 def die(score, hs):
     if score > hs:
         hs = score
         with open("high_score.txt", "w") as hs_file:
             hs_file.write(str(hs))
     return hs
+
+
 def draw_window(win, bird, pipes, base, score, high_score, is_dead):
     win.blit(BG_IMG, (0, 0))
     base.draw(win)

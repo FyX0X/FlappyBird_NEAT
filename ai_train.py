@@ -171,6 +171,7 @@ def draw_window(win, birds, pipes, base, score, gen):
 
     pygame.display.update()
 
+
 def main(genomes, config):
     global gen
     gen += 1
@@ -261,7 +262,7 @@ def main(genomes, config):
                 nets.pop(x)
                 ge.pop(x)
 
-        #draw_window(win, birds, pipes, base, score, gen)
+        draw_window(win, birds, pipes, base, score, gen)
 
 
 

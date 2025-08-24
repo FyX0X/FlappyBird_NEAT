@@ -198,6 +198,7 @@ def draw_window(win, bird, pipes, base, score, is_dead, genome):
 
     pygame.display.update()
 
+
 def main(genome, config):
 
     net = neat.nn.FeedForwardNetwork.create(genome, config)
@@ -221,7 +222,7 @@ def main(genome, config):
                 pygame.quit()
                 quit()
             if is_dead and event.type == pygame.KEYDOWN:
-                #NEW GAME        ==================================
+                # GAME        ==================================
                 bird = Bird(230, 350)
                 score = 0
                 is_dead = False
