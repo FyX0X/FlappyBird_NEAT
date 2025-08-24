@@ -103,9 +103,9 @@ Edit **`config_neat.txt`** to tweak evolution:
 ---
 
 ## 📜 License
-MIT (or your chosen license).
+MIT.
 
 ---
 
 ## 🙏 Acknowledgments
-Built with **Pygame** and **neat-python**. Inspired by popular Flappy Bird NEAT tutorials.
+Built with **Pygame** and **neat-python**. Inspired by popular Flappy Bird NEAT tutorials from Tech with Tim.
